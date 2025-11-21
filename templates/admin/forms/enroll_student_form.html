@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>AttenTrack</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../static/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../static/assets/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="../static/assets/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="../assets/static/vendors/font-awesome/css/font-awesome.min.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="../static/assets/vendors/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles --> 
+    <link rel="stylesheet" href="../static/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="{{url_for('static',filename='assets/images/logo.png')}}" />
+
+  </head>
+  <body>
+    
+    <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+          <a class="navbar-brand brand-logo gradient-primary text-decoration-none font-weight-bold" href="/user_home"><img src="{{url_for('static',filename='assets/images/logo.png')}}" style="width:70px;height:70px;padding:20px;" alt="logo" />AttenTRACK AMS</a>
+         
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-profile dropdown">
+              <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                <a class="dropdown-item" href="#">
+                  <i class="mdi mdi-account-key me-2 text-success"></i> Profile </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/">
+                  <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+              </div>
+            </li>
+            <li class="nav-item d-none d-lg-block full-screen-link">
+              <a class="nav-link">
+                <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
+              </a>
+            </li>
+            <li class="nav-item nav-logout d-none d-lg-block">
+              <a class="nav-link" href="/">
+                <i class="mdi mdi-power"></i>
+              </a>
+            </li>
+           
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper" style="height:100vh;overflow-y: auto;">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/admin_home">
+
+                <span class="menu-title" style="color: #558B2F;">Home</span>
+                <i class="mdi mdi-home menu-icon " style="color: #558B2F;"></i>
+              </a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
+                <span class="menu-title">Records</span>
+                <i class="mdi mdi-table-large menu-icon"></i>
+              </a>
+              <div class="collapse" id="icons">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.attendance_records') }}">Attendance Records</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.student_list') }}">Student List</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.class_schedule_list')}}">Schedules</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin.registered_teacher_list')}}" aria-expanded="false" aria-controls="tables">
+                <span class="menu-title">Registered Teachers</span>
+                <i class="mdi mdi-account-check menu-icon"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- partial -->
+        <div class="main-panel" >
+            <div class="content-wrapper" >
+              <div class="page-header">
+                <nav aria-label="breadcrumb">
+                  <div class="d-flex">
+              <a href="/admin/admin_home" style="text-decoration:none;"><h5 class="page-title">
+                <span class="page-title-icon bg-gradient-dark text-white me-2">
+                  <i class="mdi mdi-home"></i>
+                </span>
+              </h5></a>
+              <a href="javascript:history.back()" title="Back to previous" style="text-decoration:none;">
+                <h5 class="page-title">
+                <span class="page-title-icon bg-gradient-dark text-white me-2">
+                  <i class="mdi mdi-arrow-left-bold"></i>
+                </span>
+              </h5>
+            </a>
+              
+              <a href="javascript:history.forward()" title="Go forward" style="text-decoration:none;">
+                <h5 class="page-title">
+                <span class="page-title-icon bg-gradient-dark text-white me-2">
+                  <i class="mdi mdi-arrow-right-bold"></i>
+                </span>
+              </h5>
+            </a>
+            </div>
+                
+              </div>
+              <nav aria-label="breadcrumb">
+                
+                </nav>
+                <div class="col-6 m-1 stretch-card mx-auto">
+                  <div class="card" style="height:100%" >
+                    <div class="card-body" >
+                      
+                      <h4 class="card-title"> Enroll Student Form</h4>
+                      <p class="card-description"> Please fill the information needed</p>
+                       {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <p class="mb-1"
+                            style="display:fix;font-size:10px; width:200px; height:25px;{% if category == 'error' %}color:red;{% else %}color:rgba(21, 157, 0, 0.91);{% endif %}">
+                                <b>{% if category == 'error' %}ERROR{% else %}Success{% endif %}</b>: {{ message }}
+                            </p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                      <form class="forms-sample" action="/admin/enroll_student" method="POST">
+                        <div class="form-group">
+                            <label for="student_id">Student ID: <span class="text-danger"> *</label>
+                            <input type="" class="form-control" id="student_id" name="student_id" placeholder="Enter Student ID" required>
+                          </div>
+                        <div class="form-group">
+                          <label for="exampleInputUsername1">First Name: <span class="text-danger"> *</label>
+                          <input type="" class="form-control" id="student_first_name" name="student_first_name" placeholder="Enter First Name" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Middle Name: <span class="text-danger"> *</label>
+                          <input type="text" class="form-control" id="student_middle_name" name="student_middle_name" placeholder="Enter Middle Name" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputPassword1">Last Name: <span class="text-danger"> *</label>
+                          <input type="text" class="form-control" id="student_last_name" name="student_last_name" placeholder="Enter Last Name" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputConfirmPassword1">Suffix (ex. Jr):</label>
+                          <input type="text" class="form-control" id="student_suffix" name="student_suffix" placeholder="*If none, leave this box empty">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputUsername1">Age: <span class="text-danger"> *</label>
+                            <input type="" class="form-control" id="student_age" name="student_age" placeholder="Enter Age" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputUsername1">Parent / Guardian:  <span class="text-danger"> *</label>
+                            <input type="" class="form-control" id="student_guardian" name="student_guardian" placeholder="Enter Parent or Guardian Name">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputUsername1">Guardian Contact Number:  <span class="text-danger"> *</label>
+                            <input type="" class="form-control" id="guardian_contact" name="guardian_contact" placeholder="Enter Parent/Guardian's Number">
+                          </div>
+                        <div class="form-group">
+                            <label for="current_gradelevel">Current Grade Level: <span class="text-danger">*</span></label>
+                            <select id="current_gradelevel" name="current_gradelevel" required>
+                                <option value="" selected hidden>Select Grade Level ▼</option>
+                                {% for gl in grade_level %}
+                                    <option value="{{ gl }}">{{ gl }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+
+                          <div class="form-group">
+                              <label for="section">Section: <span class="text-danger">*</span></label>
+                              <select id="section" name="section" disabled required>
+                                  <option value="">Select Grade First</option>
+                              </select>
+                          </div>
+                        <button type="submit" class="btn btn-gradient-primary me-2">Enroll</button>
+                        <button class="btn btn-light">Cancel</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            
+            <!-- partial -->
+          </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="../static/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="../static/assets/vendors/chart.js/chart.umd.js"></script>
+    <script src="../static/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="../static/assets/js/off-canvas.js"></script>
+    <script src="../static/assets/js/misc.js"></script>
+    <script src="../static/assets/js/settings.js"></script>
+    <script src="../static/assets/js/todolist.js"></script>
+    <script src="../static/assets/js/jquery.cookie.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="../static/assets/js/dashboard.js"></script>
+    <!-- End custom js for this page -->
+
+    <script>
+      document.getElementById('current_gradelevel').onchange = function() {
+          fetch('/admin/getSection_forEnroll', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: 'current_gradelevel=' + this.value  // ✅ Must match Flask key!
+          })
+          .then(response => response.json())
+          .then(data => {
+              let section = document.getElementById('section');
+              section.disabled = false;
+              section.innerHTML = '<option selected disabled>Select Section</option>';
+              data.forEach(s => {
+                  section.innerHTML += `<option value="${s[0]}">${s[0]}</option>`;
+              });
+          });
+      };
+      </script>
+
+  </body>
+</html>

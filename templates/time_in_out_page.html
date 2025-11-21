@@ -1,0 +1,156 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>AttenTrack</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../static/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../static/assets/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="../static/assets/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="../assets/static/vendors/font-awesome/css/font-awesome.min.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="../static/assets/vendors/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles --> 
+    <link rel="stylesheet" href="../static/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="{{url_for('static',filename='assets/images/logo.png')}}" />
+  </head>
+  <body style="background:linear-gradient( 109.6deg,rgba(125, 159, 97, 0.47) 30.2%,rgba(15, 96, 19, 0.67) )  ;">
+    <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar default-layout-navbar  shadow col-lg-12 col-12 p-0 fixed-top d-flex flex-row bg-transparent" >
+        <div class=" text-center navbar-brand-wrapper d-flex align-items-center justify-content-start bg-transparent">
+          <a class="navbar-brand brand-logo gradient-primary text-decoration-none font-weight-bold" href="/"><img src="{{url_for('static',filename='assets/images/logo.png')}}" style="width:70px;height:70px;padding:20px;" alt="logo" />AttenTRACK AMS</a>
+         
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+     
+        <!-- partial -->
+       
+            <div class="content-wrapper w-100 bg-transparent" style="min-height:100vh;"> 
+             
+              <a href="javascript:history.back()" class="me-3 ms-3">
+                  <i class="mdi mdi-arrow-left" style="font-size: 24px; color: black;"></i>
+              </a>
+                <div class="  card-body m-3 d-flex justify-content-center align-items-center " >
+               
+                    <div class="m-3 bg-white p-4 rounded-5  d-flex flex-column justify-content-center align-items-center gap-3" style="min-width: 500px; min-height: 300px;  box-shadow:0px 6px 10px rgba(0, 0, 0, 0.22);">
+                      <div class="text-center navbar-brand-wrapper align-items-center justify-content-start">
+                        <div><a class="navbar-brand brand-logo gradient-primary text-decoration-none font-weight-bold">DATE AND TIME NOW: </a></div>
+                        <div id="clock" class="d-flex" style="margin-top:20px; margin-bottom:30px; padding-top:2%; max-width:350px">
+                          <div class="cbg"> <h2 id="h">12</h2> </div> <h3>:</h3>
+                          <div class="cbg"> <h2 id="m">20</h2> </div><h3>:</h3> 
+                          <div class="cbg"> <h2 id="s">00</h2> </div> 
+                          <div class="cbg" id="ap">AM </div> 
+                        </div>
+                      </div>
+                      {% with messages = get_flashed_messages(with_categories=True) %}
+                      {% if messages %}
+                        <div id="flash-messages">
+                        {% for category, message in messages %}
+                          <p class="mb-3 text-center"
+                            style="font-size: 14px; {% if category == 'error' %}color:red;{% else %}color:rgba(21, 157, 0, 0.91);{% endif %}">
+                            <b>{% if category == 'error' %}ERROR{% else %}Success{% endif %}</b>: {{ message }}
+                          </p>
+                        {% endfor %}
+                        </div>
+                      {% endif %}
+                    {% endwith %}
+                      <a class="btn btn-lg btn-primary  rounded-5 " href="/time_in_out/take_attendance_cam">Start Taking Attendance</a>
+                      <div class="m-1 d-flex justify-content-center align-items-center gap-2 " style="width:75%; margin:auto;">
+                      </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+        </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <footer class="footer">
+              <div class=" justify-content-center justify-content-sm-between">
+                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2025. All rights reserved.</span> 
+              </div>
+            </footer>
+            <!-- partial -->
+    
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="../static/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="../static/assets/vendors/chart.js/chart.umd.js"></script>
+    <script src="../static/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="../static/assets/js/off-canvas.js"></script>
+    <script src="../static/assets/js/misc.js"></script>
+    <script src="../static/assets/js/settings.js"></script>
+    <script src="../static/assets/js/todolist.js"></script>
+    <script src="../static/assets/js/jquery.cookie.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="../static/assets/js/dashboard.js"></script>
+    <!-- End custom js for this page -->
+    <!-- message disappers in 3 sec -->
+
+    <!--script for clock-->
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+    
+        realTime();
+
+        });
+
+
+        function realTime() {
+
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+        var halfday = "AM";
+        halfday = (hour >= 12) ? "PM" : "AM";
+        hour = (hour == 0) ? 12 : ((hour > 12) ? (hour - 12): hour);
+        hour = update(hour);
+        min = update(min);
+        sec = update(sec);
+        document.getElementById("h").innerText = hour;
+        document.getElementById("m").innerText = min;
+        document.getElementById("s").innerText = sec;
+        document.getElementById("ap").innerText = halfday;
+
+        setTimeout(realTime, 1000);
+        }
+
+      function update(k) {
+      if (k < 10) { return "0" + k; } else { return k; } }
+  </script>
+
+    <script>
+      setTimeout(() => {
+        let flashBox = document.getElementById("flash-messages");
+        if (flashBox) {
+          flashBox.style.transition = "opacity 0.5s ease";
+          flashBox.style.opacity = "0";
+          setTimeout(() => flashBox.remove(), 500);
+        }
+      }, 2000);
+    </script>
+  </body>
+</html>
