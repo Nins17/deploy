@@ -130,109 +130,62 @@ def enrollStudentform():
         return not_logged()
  
 
-@admin.route("/enroll_student", methods=["POST", "GET"])
+@admin.route("/enroll_student", methods=["POST"])
 def enroll_student():
     cursor, conn = get_db_cursor()
 
-    if request.method == "POST":
-        student_id = request.form['student_id']
-        student_first_name = request.form['student_first_name']
-        student_middle_name = request.form['student_middle_name']
-        student_last_name = request.form['student_last_name']
-        student_suffix = request.form['student_suffix']
-        student_age = request.form['student_age']
-        student_guardian = request.form['student_guardian']
-        guardian_contact = request.form['guardian_contact']
-        student_gradelevel = request.form['current_gradelevel']
-        student_section = request.form['section']
+    student_id = request.form['student_id']
+    student_first_name = request.form['student_first_name']
+    student_middle_name = request.form['student_middle_name']
+    student_last_name = request.form['student_last_name']
+    student_suffix = request.form['student_suffix']
+    student_age = request.form['student_age']
+    student_guardian = request.form['student_guardian']
+    guardian_contact = request.form['guardian_contact']
+    student_gradelevel = request.form['current_gradelevel']
+    student_section = request.form['section']
 
-        # Check if student already exists in DB
-        cursor.execute('SELECT * FROM student_info WHERE student_id = %s', [student_id])
-        student_exist = cursor.fetchone()
-        if student_exist:
-            flash('Student already enrolled.', 'error')
-            return redirect(url_for('admin.enrollStudentform'))
+    # check if exists
+    cursor.execute("SELECT * FROM student_info WHERE student_id=%s", [student_id])
+    if cursor.fetchone():
+        flash("Student already enrolled.", "error")
+        return jsonify({"redirect": url_for("admin.enrollStudentform")})
 
-        # Create a folder for this student (e.g. known_faces/101/)
-        student_dir = os.path.join(SAVE_DIR, str(student_id))
-        if not os.path.exists(student_dir):
-            os.makedirs(student_dir)
+    # create face folder
+    student_dir = os.path.join(SAVE_DIR, str(student_id))
+    os.makedirs(student_dir, exist_ok=True)
 
-        # Open webcam
-        cap = cv2.VideoCapture(0)
-        photo_count = 0
-        max_photos = 3  # capture up to 3 faces
+    # receive 3 photos
+    for i in range(1, 4):
+        file = request.files.get(f"photo{i}")
+        if not file:
+            flash("Missing photos.", "error")
+            return jsonify({"redirect": url_for("admin.enrollStudentform")})
 
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
+        path = os.path.join(student_dir, f"{i}.jpg")
+        file.save(path)
 
-            frame = cv2.flip(frame, 2)
-            height, width = frame.shape[:2]
-            box_width, box_height = 300, 300
-            x1 = width // 2 - box_width // 2
-            y1 = height // 2 - box_height // 2
-            x2 = x1 + box_width
-            y2 = y1 + box_height
+    # save to db (use first photo)
+    first_image_path = os.path.join(student_dir, "1.jpg").replace("\\", "/")
 
-            # Draw the face box
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.putText(frame, f"Align face inside box. ({photo_count}/{max_photos})",
-                        (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-            cv2.putText(frame, "Press 's' to Save | 'q' to Quit", (x1, y2 + 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+    query = """
+        INSERT INTO student_info(
+            student_id, student_image_path, student_first_name, student_middle_name,
+            student_last_name, student_suffix, student_age, student_guardian,
+            guardian_contact, current_grade_level, section
+        ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """
+    values = (
+        student_id, first_image_path, student_first_name, student_middle_name,
+        student_last_name, student_suffix, student_age, student_guardian,
+        guardian_contact, student_gradelevel, student_section
+    )
+    cursor.execute(query, values)
+    conn.commit()
+    cursor.close()
 
-            cv2.imshow("Student Enrollment", frame)
-            key = cv2.waitKey(1)
-
-            if key == ord('s'):
-                cropped_face = frame[y1:y2, x1:x2]
-
-                # Save image as 1.jpg, 2.jpg, 3.jpg
-                filename = f"{photo_count + 1}.jpg"
-                image_path = os.path.join(student_dir, filename)
-                cv2.imwrite(image_path, cropped_face)
-                print(f"Saved {image_path}")
-                photo_count += 1
-
-                if photo_count >= max_photos:
-                    print("Collected enough images.")
-                    break
-
-            elif key == ord('q'):
-                flash("Enrollment canceled by user.")
-                break
-
-        cap.release()
-        cv2.destroyAllWindows()
-
-        # If at least one photo was saved, save info to database
-        if photo_count > 0:
-            first_image_path = os.path.join(student_dir, "1.jpg").replace("\\", "/")
-            query = """
-                INSERT INTO student_info(
-                    student_id, student_image_path, student_first_name, student_middle_name,
-                    student_last_name, student_suffix, student_age, student_guardian,
-                    guardian_contact, current_grade_level, section
-                ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            """
-            values = (
-                student_id, first_image_path, student_first_name, student_middle_name,
-                student_last_name, student_suffix, student_age, student_guardian,
-                guardian_contact, student_gradelevel, student_section
-            )
-            cursor.execute(query, values)
-            conn.commit()
-            cursor.close()
-            flash(f'Student {student_first_name} enrolled successfully with {photo_count} face images.', 'success')
-        else:
-            flash('No images were captured. Enrollment incomplete.', 'error')
-
-        return redirect(url_for('admin.enrollStudentform'))
-
-    return redirect(url_for('admin.student_list'))
-
+    flash("Student enrolled successfully.", "success")
+    return jsonify({"redirect": url_for("admin.enrollStudentform")})
     
 @admin.route('/getSection_forEnroll', methods=["POST"])
 def getSection_forEnroll():
